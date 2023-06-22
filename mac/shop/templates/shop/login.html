@@ -1,0 +1,125 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+
+{% block title %} Login Page {% endblock %}
+
+{% block body %}
+<div class="container my-3">
+    <!--Error alert  -->
+    <div id="errorMsg" name="errorMsg" class="alert alert-danger alert-dismissible fade show" style="display: none;" role="alert" >
+        <strong>Error!</strong> Check Email | Password before Login.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <form method="POST" action="/shop/login/">
+        {% csrf_token %}
+
+        <div class="text-center form-group mb-4">
+            <img class="mb-4" src="/static/shop/login.png" alt="Contact Us" width="150" height="150">
+            <h1 class="h2 mb-3 font-weight-normal">Please Login!</h1>
+        </div>
+
+        <div class="col-sm-5 col-12 form-group mx-auto">
+            <!-- Username -->
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" class="form-control" placeholder="Email" required="" id="email">
+                <div class="invalid-feedback">
+                    Email is Incorrect!
+                </div>
+                <!-- For Valid Feedback -->
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" required="" id="password">
+                <div class="invalid-feedback">
+                    Password is Incorrect!
+                </div>
+                <!-- For Valid Feedback -->
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block mt-2" id="login" name="login" type="submit">Login</button>
+        </div>
+    </form>
+    <p class="mb-3 text-center text-muted"><a href="/shop/forgotPassword/">Forgot Password</a></p>
+    <p class="mb-3 text-center text-muted">Don't have an account? <a href="/shop/register/">Sign up here</a></p>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+
+// Intialize the constants
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const passwordStatus = document.getElementById('passwordStatus');
+const errorMsg = document.getElementById('errorMsg');
+
+// setting flags
+let validEmail = false;
+let validPassword = false;
+let error = false;
+
+
+// Email Event Listener
+email.addEventListener('blur', ()=>{
+    //  validate email here 
+    let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+).([a-zA-Z]{2,7}$)/;
+    let str = email.value;
+    if(regex.test(str)){
+        email.classList.remove('is-invalid')
+        email.classList.add('is-valid');
+        validEmail = true;
+    }
+    else{
+        email.classList.remove('is-valid');
+        email.classList.add('is-invalid')
+        validEmail = false;
+    }
+});
+
+
+//Password Event Listener
+password.addEventListener('blur', ()=>{
+    // validate password here
+    let regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/;
+    let str = password.value;
+    // https://stackoverflow.com/questions/27938415/regex-for-password-atleast-1-letter-1-number-1-special-character-and-should
+    if(regex.test(str)){
+        // Password matched
+        password.classList.remove('is-invalid')
+        password.classList.add('is-valid');
+        validPassword = true;
+    }
+    else{
+        // Password Not matched
+        password.classList.remove('is-valid');
+        password.classList.add('is-invalid')
+        validPassword = false;
+    }
+})
+
+
+// Submit Button Event listener
+let login = document.getElementById('login');
+login.addEventListener('click',(e)=>{
+    if(validEmail && validPassword){
+        errorMsg.style.display = 'none';
+    }
+    else{
+        errorMsg.style.display = 'block';
+        e.preventDefault();
+    }
+})
+
+</script>
+{% endblock %}

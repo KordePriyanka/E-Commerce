@@ -1,0 +1,175 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Contact Page {% endblock %}
+
+{% block css %}
+<style>
+  .margin-top {
+    margin-top: 5rem;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-3">
+  <!--Error alert  -->
+  <div id="errorMsg" name="errorMsg" class="alert alert-danger alert-dismissible fade show" style="display: none;"
+    role="alert">
+    <strong>Error!</strong> Check Username | Email | Phone | Message before submitting.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <form action="/shop/contact/" method="post">
+    {% csrf_token %}
+
+    <div class="text-center form-group mb-4">
+      <img class="mb-4" src="/static/shop/contact.png" alt="Contact Us" width="150" height="150">
+      <h1 class="h2 mb-3 font-weight-normal">Contact Us</h1>
+    </div>
+
+    <div class="col-md-8 col-12 form-group mx-auto">
+      <!-- Name -->
+      <div class="form-group mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" name="name" id="name" placeholder="Enter Your Name:">
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Only alphabets! FirstName LastName
+        </div>
+      </div>
+      <!-- Email -->
+      <div class="form-group mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" id="email" placeholder="Enter Your Email:">
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Incorrect Email
+        </div>
+      </div>
+      <!-- Phone -->
+      <div class="form-group mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="tel" class="form-control" name="phone" id="phone" placeholder="Enter Your Phone number:">
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Only Numbers | 10 Digits | Incorrect Phone Number
+        </div>
+      </div>
+      <!-- How may we help you? -->
+      <div class="form-group mb-3">
+        <label for="desc" class="form-label">How may we help you?</label>
+        <textarea name="desc" id="desc" cols="30" rows="10" class="form-control"
+          placeholder="How may we help you"></textarea>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Message should be atleast 50 characters and max 500 characters!
+        </div>
+      </div>
+      <!-- Submit button -->
+      <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit">Submit</button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  const userName = document.getElementById('name')
+  const email = document.getElementById('email') // no regex for email 
+  const phone = document.getElementById('phone')
+  const msg = document.getElementById('desc')
+  const errorMsg = document.getElementById('errorMsg')
+
+
+
+  let validUserName = false
+  let validEmail = false
+  let validPhone = false
+  let validMsg = false
+
+  // Name Event Listener
+  userName.addEventListener('blur', () => {
+    //  validate name here
+    let regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,30}$/;
+    // Pooja Bhagat - start with alphabet and space and end with alphabet
+    let str = userName.value;
+    if (regex.test(str)) {
+      userName.classList.remove('is-invalid')
+      userName.classList.add('is-valid');
+      validUserName = true;
+    }
+    else {
+      userName.classList.remove('is-valid');
+      userName.classList.add('is-invalid');
+      validUserName = false;
+    }
+  });
+
+  // Email Event Listener
+  email.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+).([a-zA-Z]{2,7}$)/;
+    let str = email.value;
+    if (regex.test(str)) {
+      email.classList.remove('is-invalid')
+      email.classList.add('is-valid');
+      validEmail = true;
+    }
+    else {
+      email.classList.remove('is-valid');
+      email.classList.add('is-invalid')
+      validEmail = false;
+    }
+  });
+
+  // Phone number
+  phone.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^[0-9]{10}$/;
+    let str = phone.value;
+    if (regex.test(str)) {
+      phone.classList.remove('is-invalid')
+      phone.classList.add('is-valid');
+      validPhone = true;
+    }
+    else {
+      phone.classList.remove('is-valid');
+      phone.classList.add('is-invalid')
+      validPhone = false;
+    }
+  });
+
+  // Message number
+  msg.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{50,450}$/;
+    let str = msg.value;
+    if (regex.test(str)) {
+      msg.classList.remove('is-invalid')
+      msg.classList.add('is-valid');
+      validMsg = true;
+    }
+    else {
+      msg.classList.remove('is-valid');
+      msg.classList.add('is-invalid')
+      validMsg = false;
+    }
+  });
+
+
+
+  // Submit Button Event listener
+  let submit = document.getElementById('submit');
+  submit.addEventListener('click', (e) => {
+    if (validEmail && validUserName && validPhone && validMsg) {
+      errorMsg.style.display = 'none';
+    }
+    else {
+      errorMsg.style.display = 'block';
+      e.preventDefault();
+    }
+  })
+
+</script>
+{% endblock %}

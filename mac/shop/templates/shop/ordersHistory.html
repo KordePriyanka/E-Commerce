@@ -1,0 +1,49 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Manage Address Page {% endblock %}
+
+{% block css %}
+<style>
+    
+</style>
+{% endblock %}
+
+{% block body %} 
+<div class="container">
+    <h1 class="my-3"> Orders History Information:</h1>
+    <hr>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Order Id</th>
+            <th scope="col">Products Names</th>
+            <th scope="col">Date of Purchase</th>
+            <th scope="col">Total Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if allOrders %}
+          {% for order in allOrders %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{order.order_id}}</td>
+            <td>{{order.productsName|slice:':-1'}}</td>
+            <td>{{order.date_purchase}}</td>
+            <td>{{order.amount}}</td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <h1>No Products Yet</h1>
+          {% endif %}
+        </tbody>
+      </table>
+
+</div>
+{% endblock body %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %} 
+

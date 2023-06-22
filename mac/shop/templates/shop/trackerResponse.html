@@ -1,0 +1,58 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Tracker Page {% endblock %}
+
+{% block css %}
+<style>
+    #items {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="col my-4">
+        <div class="col my-4">
+            <h2>Your Order Status :</h2>
+            <div class="my-4">
+                <div id="items">
+                    {{response}}
+                </div>
+                <!-- for order status -->
+                <ul class="list-group" id="json_items">
+                
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    items = document.getElementById('items').innerHTML
+    json = JSON.parse(items)
+
+    var sum = 0
+    for (let item in json) {
+        sum = sum + 1;
+    }
+
+    json_items = document.getElementById('json_items')
+    myStr = ""
+    for (i = 0; i < sum; i++) {
+        myNewStr = `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            ${json[i]['text']}
+            <span class="badge bg-primary rounded-pill">${json[i]['time']}</span>
+        </li>
+        `
+        myStr = myStr + myNewStr
+    }
+
+    json_items.innerHTML = myStr
+
+</script>
+{% endblock %}

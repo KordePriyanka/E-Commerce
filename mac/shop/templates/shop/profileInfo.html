@@ -1,0 +1,78 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} ProfileInfo Page {% endblock %}
+
+{% block css %}
+<style>
+    
+</style>
+{% endblock %}
+
+{% block body %} 
+<div class="container col-md-9">
+    <h1 class="my-3">Profile Information:</h1>
+    <hr>
+    <form action="/shop/profileInfo/" method="post">
+      {% csrf_token %}
+        <!-- Row for Name -->
+        <div class="row">
+            <!-- first Name -->
+            <div class="col-md-6 col-sm-4 my-2">
+                <label for="firstName" class="form-label">First Name:</label>
+              <input type="text" class="form-control" placeholder="First name" name="firstName" id="firstName" aria-label="First name" value="{{user.firstName}}">
+            </div>
+            <!-- Last Name -->
+            <div class="col-md-6 col-sm-4 my-2">
+                <label for="lastName" class="form-label">Last Name:</label>
+              <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Last name" aria-label="Last name" value="{{user.lastName}}">
+            </div>
+          </div>
+
+          <!-- For Gender -->
+          <label for="username" class="form-label my-3">Your Gender:  </label>
+            <div class="col-md-6 col-sm-4 my-2">
+            <input type="text" class="form-control" name="gender" id="gender" placeholder="Gender" aria-label="gender" value="{{user.gender}}">
+          </div>
+
+          <div class="row">
+            <!-- Email Address -->
+          <div class="col-md-6 col-sm-4 my-2">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" name="email" placeholder="Enter Your Email"
+              required value="{{request.session.email}}" disabled>
+          </div>
+          <!-- Username -->
+          <div class="col-md-6 col-sm-4 my-2">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" name="username" placeholder="Enter Your Email"
+              required value="{{request.session.username}}" disabled>
+          </div>
+          </div>
+          
+          <!-- Phone Number -->
+          <div class="col-12 my-2">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter Your Phone Number" required value="{{user.phone}}">
+            <!-- For InValid Feedback -->
+            <div id="" class="invalid-feedback">
+              Incorrect Phone Number ! 10 Digit Phone number..
+            </div>
+            <!-- For Valid Feedback -->
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+          </div>
+
+          <!-- submit button -->
+          <div class="my-3">
+            <button type="submit" class="btn btn-primary" id="placeOrder" name="placeOrder">Submit</button>
+          </div>
+    </form>
+</div>
+{% endblock body %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %} 
+

@@ -1,0 +1,109 @@
+{% extends 'shop/basic.html' %}
+
+<!-- footer  -->
+{% include 'shop/addProdCart.js' %}
+
+{% block title %} About Page {% endblock %}
+
+{% block css %}
+<style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <!-- Marketing messaging and featurettes
+  ================================================== -->
+  <!-- Wrap the rest of the page in another container to center all the content. -->
+
+  <div class="container marketing my-4">
+    {% load static %}
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+      <div class="col-lg-4">
+        <img src="{% static 'shop/about1.jpg' %}" class="d-block bd-placeholder-img rounded-circle" height="250px" width="300px">
+        <h2>Pooja Bhagat</h2>
+        <p>Some representative placeholder content for the three columns of text below the carousel. This is the first column.</p>
+      </div>
+      <div class="col-lg-4">
+       
+        <img src="{% static 'shop/about4.jpg' %}" class="d-block bd-placeholder-img rounded-circle" height="300px" width="300px">
+        <h2>Mark Manson</h2>
+        <p>Another exciting bit of representative placeholder content. This time, we've moved on to the second column.</p>
+      </div>
+      <div class="col-lg-4">
+        <img src="{% static 'shop/about3.jpg' %}" class="d-block bd-placeholder-img rounded-circle" height="300px" width="300px">
+        <h2>Mark Twin</h2>
+        <p>And lastly this, the third column of representative placeholder content.</p>
+      </div>
+    </div>
+
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">MyCart is providing best shopping experience. <span class="text-muted">It’ll blow your mind.</span></h2>
+        <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
+      </div>
+      <div class="col-md-5">
+
+        <img src="{% static 'shop/about5.jpg' %}" class="d-block bd-placeholder-img" height="500" width="500">
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7 order-md-2">
+        <h2 class="featurette-heading">Oh yeah, it’s that good. <span class="text-muted">See for yourself.</span></h2>
+        <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this layout would work with some actual real-world content in place.</p>
+      </div>
+      <div class="col-md-5 order-md-1">
+        
+
+        <img src="{% static 'shop/about6.jpg' %}" class="d-block bd-placeholder-img" height="500" width="500">
+
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
+        <p class="lead">And yes, this is the last block of representative placeholder content. Again, not really intended to be actually read, simply here to give you a better view of what this would look like with some actual content. Your content.</p>
+      </div>
+      <div class="col-md-5">
+        
+        <img src="{% static 'shop/about7.jpg' %}" class="d-block bd-placeholder-img" height="500" width="500">
+
+
+      </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+
+  </div><!-- /.container -->
+
+{% endblock %}
+

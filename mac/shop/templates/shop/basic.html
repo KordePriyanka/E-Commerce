@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+
+  <!-- Font-awesome CSS CDN  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon_io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon_io/favicon-16x16.png">
+  <link rel="manifest" href="/static/favicon_io/site.webmanifest">
+
+
+  <title>{% block title %} {% endblock %}</title>
+
+  {% block css %} {% endblock %}
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"><i class="fab fa-opencart"></i> MyCart</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% if request.session.email  %}
+          <!-- Home -->
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/shop"><i class="fas fa-home"></i>
+              Home</a>
+          </li>
+          {% endif %}
+          <!-- About Us -->
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/shop/about">About Us</a>
+          </li>
+          <!-- Contact US -->
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/shop/contact"></i> Contact Us</a>
+          </li>
+
+          <!-- Profile -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Products
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/shop/electronicsProd"><i class="fas fa-mobile"></i> Electronics</a></li>
+              <li><a class="dropdown-item" href="/shop/FashionProd"><i class="fas fa-gem"></i> Fashion</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/shop/homeProd"><i class="fas fa-lightbulb"></i> Home Kitchen & furniture</a></li>
+              <li><a class="dropdown-item" href="/shop/booksProd"><i class="fas fa-book"></i> Books</a></li>
+            </ul>
+          </li>
+
+          {% if request.session.email  %}
+          <!-- Profile -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{request.session.username}}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/shop/profileInfo"><i class="fas fa-user-circle"></i> My Profile</a></li>
+              <li><a class="dropdown-item" href="/shop/tracker"><i class="fas fa-truck"></i> Tracker</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <!-- <li><a class="dropdown-item" href="/shop/myOrders">My Orders</a></li> -->
+              <li><a class="dropdown-item" href="/shop/ordersHistory"><i class="fas fa-history"></i> Order Histroy</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <!-- My Stuff -->
+              <!-- <li><a class="dropdown-item" href="#">My Wishlist</a></li> -->
+              <!-- <li><a class="dropdown-item" href="#">My reviews and rating</a></li> -->
+              <li><a class="dropdown-item" href="/shop/logout"><i class="fas fa-power-off"></i> Logout</a></li>
+            </ul>
+          </li>
+          {% else %}
+          <!-- Login , register -->
+
+          <!-- Register -->
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/shop/register">Register</a>
+          </li>
+
+          <!-- Login -->
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/shop/login">Login</a>
+          </li>
+          {% endif %}
+          <!-- Tracker -->
+          
+        </ul>
+        <form class="d-flex" method="get" action="/shop/search/">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search"
+            id="search" />
+          <button class="btn btn-outline-success" type="submit">
+            <i class="fas fa-search-plus"></i>
+          </button>
+        </form>
+
+        
+        <a href="/shop/checkoutOrders/"><button type="button" class="btn btn-secondary mx-2 my-1"><i class="fas fa-cart-plus"></i> Cart{<span id="cart">0</span>}
+          </button></a>
+      </div>
+    </div>
+  </nav>
+  <!-- Dismissable Alert -->
+  {% if messages %} {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show my-0" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %} {% endif %} 
+  
+  {% block body %} {% endblock %}
+
+   <!-- footer  -->
+   {% include 'shop/footer.html' %}
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+    crossorigin="anonymous"></script>
+
+  <script>
+    // Find out the cart items from localStorage
+  if (localStorage.getItem('cart') == null) {
+    // initialize an cart object
+    var cart = {};
+  }
+  else {
+    // in localstorage the item is in string form so to parse in JSON format use JSON.parse
+    cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+    // total cart products in navigation bar
+    function total_cart_product(cart) {
+      var sum = 0
+      for(let item in cart){
+        sum = sum + cart[item][0];
+      }
+      document.getElementById('cart').innerHTML = sum;
+    }
+
+    // calling totalCartProd function
+    total_cart_product(cart)
+  </script>
+  
+
+  {% block js %} 
+  {% endblock %}
+
+  
+</body>
+
+</html>

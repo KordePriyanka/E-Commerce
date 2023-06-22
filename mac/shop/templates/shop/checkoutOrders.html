@@ -1,0 +1,201 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Checkout Orders {% endblock %}
+
+{% block css %}
+<style>
+  .col-md-3 img {
+    width: 300px;
+    object-fit: contain;
+  }
+
+  #items {
+    display: inline-block;
+  }
+
+  #cartEmpty {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid rgb(233, 232, 232);
+    border-radius: 10px;
+  }
+
+  #cartEmpty img {
+    width: 500px;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-3">
+  <!-- Products display -->
+  <div class="row" id="cartStatus">
+    <!-- col1 -->
+    <h2 class="my-4">MyCart checkout - Review Your Cart Items</h2>
+    <div class="col my-2">
+      <ul class="list-group col-md-12" id="items">
+      </ul>
+
+      <ul class="col-md-12 list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between">
+          <button type="button" class="btn btn-primary" id="clearCart" name="clearCart">Clear Cart</button>
+        </li>
+      </ul>
+
+    </div>
+    <!-- col 2 -->
+    <!-- Payment Options -->
+    <div class="col-md-6">
+      <div class="col-md-9 col-lg-9 order-md-last">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-primary">Prize Details:</span>
+          <span class="badge bg-primary rounded-pill" id="totalProducts">0</span>
+        </h4>
+        <ul class="list-group mb-3" id="totalProductsOrder">
+
+
+        </ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total Amount:</span>
+          <span>Rs.<strong id="totalAmount"></strong></span>
+        </li>
+        <ul>
+
+        </ul>
+
+        <div class="d-grid gap-2">
+          <a href="/shop/checkout/"><button class="btn btn-primary" type="button">Place Order</button></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+  checkoutCartItems()
+  clearCartProducts()
+  removeProduct()
+
+  // logic for clear Cart
+  function clearCartProducts() {
+    clearCart = document.getElementById('clearCart')
+    clearCart.addEventListener('click', () => {
+      localStorage.clear();
+      cart = {}
+      location.reload(true)
+    })
+    checkoutCartItems()
+  }
+
+
+  function checkoutCartItems() {
+    if (localStorage.getItem('cart') == null) {
+      var cart = {};
+    }
+    else {
+      cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+    let myStr = ""
+    let myTotalAmountStr = ""
+    let total = 0
+
+    if (Object.entries(cart).length === 0) {
+
+      document.getElementById('cartStatus').innerHTML = `
+        <div id="cartEmpty">
+          {% load static %}
+          <img src="{% static 'shop/emptyCard.webp' %}" alt="..."  >
+          Your cart is empty, please add some items before checking out ! 
+        </div>
+        `
+    }
+    else {
+
+      let sum = 0
+      for (item in cart) {
+        let name = cart[item][1];
+        let qty = cart[item][0];
+        let image = cart[item][2];
+        let prize = cart[item][3];
+
+        totalPrize = qty * prize.slice(3,)
+        sum = sum + qty;
+        total = total + totalPrize
+
+
+        myNewStr = `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div class="row">
+            <div class="col-md-3">
+              <img src=${image} class="item-image img-fluid" alt="...">
+            </div>
+            <div class="col-md-6">
+              <p>${name}</p>
+              <p>Quantity:${qty}</p>
+              <b><p>${prize}    <button type="button" class="btn btn-outline-primary btn-sm removeItem"  id="remove${item}" name="remove${item}">Remove</button></p></b>
+            </div>
+          </div>
+        </li>
+        `
+
+        myNewTotalAmountStr = ` 
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">${name}</h6>
+            </div>
+            <span class="text-muted">Rs.${totalPrize}</span>
+          </li>
+          `
+
+        myStr = myStr + myNewStr;
+
+        myTotalAmountStr = myTotalAmountStr + myNewTotalAmountStr;
+
+        document.getElementById('cart').innerHTML = sum;
+        document.getElementById('totalProducts').innerHTML = sum;
+
+      }
+    }
+
+
+    document.getElementById('items').innerHTML = myStr;
+    document.getElementById('totalProductsOrder').innerHTML = myTotalAmountStr;
+
+    document.getElementById('totalAmount').innerHTML = total
+
+  }
+
+
+  // function to remove particular products from the cart
+  function removeProduct() {
+    if (localStorage.getItem('cart') == null) {
+      var cart = {};
+    }
+    else {
+      cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+    products_to_remove_buttons = document.getElementsByClassName('removeItem')
+    Array.from(products_to_remove_buttons).forEach(function (removeItem) {
+      removeItem.addEventListener("click", () => {
+        removeItem_id = removeItem.id.slice(6,)
+        delete cart[removeItem_id]
+        localStorage.setItem('cart', JSON.stringify(cart));
+        location.reload(true)
+      })
+    })  
+}
+
+</script>
+{% endblock %}
