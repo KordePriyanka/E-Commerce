@@ -1,0 +1,184 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} {{product.product_name}} {% endblock %}
+
+{% block css %}
+<style>
+  .align-items-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+
+@media only screen and (max-width: 775px){
+
+  .row img{
+    width: 220px;
+    height: 200px;
+    object-fit: contain;
+  }
+
+  .cart{
+    margin-top: 3px;
+  }
+
+}
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Image here -->
+            <div class="row align-items-center">
+                <img id="imgpr{{product_id}}" src="/media//{{product.image}}" alt="{{product.product_name}}"  height="385px">
+            </div>
+            <!-- Add to cart options -->
+            <div class="align-items-center">
+                <!-- button Add to card -->
+                <span id="divpr{{product_id}}" class="divpr{{product_id}}">
+                  <button id="pr{{product_id}}" class="btn btn-primary cart my-2" >Add to Cart</button>
+                </span>
+            </div>   
+        </div>
+        <div class="col-md-8">
+            <h5 id="namepr{{product_id}}" name="namepr{{product_id}}">{{product.product_name}}</h5>
+            
+            <h5 id="prizepr{{product_id}}">Rs.{{product.price}} </h5>
+            <hr>
+            <p>{{product.desc}}</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+<!-- javascript -->
+{% block js %} 
+<script>
+  
+
+  // Logic for creating cart Object
+  if(localStorage.getItem('cart') == null){
+    // initialize an cart object
+    var cart = {};
+  }
+  else{
+    cart = JSON.parse(localStorage.getItem('cart'));
+    total_cart_product(cart)
+  }
+
+  // logic for cart clicked button
+  cart_products = document.getElementsByClassName('cart')
+
+  Array.from(cart_products).forEach(function(cart_product){
+    cart_product.addEventListener("click", myfunc)
+  })
+
+  
+  
+  // total cart products in navigation bar
+  function total_cart_product(cart) {
+    var sum = 0
+    for(let item in cart){
+      sum = sum + cart[item][0];
+    }
+    document.getElementById('cart').innerHTML = sum;
+  }
+
+
+  
+// for clicking the add to cart
+  function myfunc(event){
+    // to get id
+    var idStr = this.id.toString();
+    //console.log("This is the value of id",idStr); // idStr is the key and added is values
+
+    if(cart[idStr] != undefined){
+      cart[idStr] = cart[idStr] + 1;
+      qty = cart[idStr][0] + 1;
+      cart[idStr] = [qty, name];
+    }
+    else{
+      cart[idStr] = 1;
+      qty = 1;
+      name = document.getElementById('name' + idStr).innerHTML;
+      image = document.getElementById('img' + idStr).src;
+      prize = document.getElementById('prize' + idStr).innerHTML;
+      cart[idStr] = [qty, name, image , prize];
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    updateCart(cart)
+  }
+  
+  updateCart(cart)
+  // For incrementing and decrementing the cart
+  function updateCart(cart){
+    //var idStr = this.id.toString();
+    url_str = String(window.location.href)
+    split_url_string = url_str.split('=')
+    idStr = "pr" + split_url_string[1]
+    document.getElementById('div' + idStr).innerHTML = "<button id='minus" + idStr + "' class='btn btn-primary minus'> - </button> <span id='val" + idStr + "' >" + cart[idStr][0] + "</span> <button id='plus" + idStr + "' class='btn btn-primary plus'> + </button>";
+
+     
+  minus = document.getElementsByClassName("minus")
+  
+  // ************ For Minus Button *****************
+  
+  Array.from(minus).forEach(function (item_minus) {
+    item_minus.addEventListener("click", ()=>{
+      minus_btn_id = item_minus.id
+      span_btn_id = item_minus.parentElement.children[1].id
+      
+      cart_item_id = minus_btn_id.slice(5,)
+      cart[cart_item_id][0] = cart[cart_item_id][0]  - 1
+      cart[cart_item_id][0] = Math.max(0, cart[cart_item_id][0]);
+
+      if(cart[cart_item_id][0] == 0){
+        //console.log("deleting the item:" + 'div'+ cart_item_id)
+        cart_zero_item_id = 'div'+ cart_item_id
+        document.getElementById(cart_zero_item_id).innerHTML = `<button id=${cart_item_id} class="btn btn-primary cart">Add to Cart</button>` 
+        delete cart[cart_item_id]
+        updateCart(cart)
+        total_cart_product(cart)
+        location.reload(true)
+      }
+      else{
+        span_btn_id.innerHTML = cart[cart_item_id][0] // we will have cart[cart_item_id] is value of pr1
+      }
+      updateCart(cart)
+      total_cart_product(cart)
+    })
+  })
+  
+  
+  // ************ For Plus Button *****************
+  plus = document.getElementsByClassName("plus")
+  Array.from(plus).forEach(function (item_plus) {
+    item_plus.addEventListener("click", ()=>{
+      minus_btn_id = item_plus.id
+      span_btn_id = item_plus.parentElement.children[1].id
+      plus_btn_id = item_plus.parentElement.children[2].id
+      cart_item_id = plus_btn_id.slice(4,)
+      cart[cart_item_id][0] = cart[cart_item_id][0] + 1
+      span_btn_id.innerHTML = cart[cart_item_id][0]
+      updateCart(cart)
+      total_cart_product(cart)
+    })
+  })
+     
+  // Adding items in local storage
+  localStorage.setItem('cart', JSON.stringify(cart));
+  }
+
+  
+
+</script>
+{% endblock %} 

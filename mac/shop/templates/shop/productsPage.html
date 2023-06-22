@@ -1,0 +1,55 @@
+<!-- Showing the Products according to the category selected by the user -->
+{% extends 'shop/basic.html' %}
+
+{% block title %} {{request.session.category}} {% endblock %}
+
+{% block css %}
+<style>
+    /* Project Section */
+
+.project-cards-flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Projects{
+    font-family: 'Roboto Slab', serif;
+}
+
+
+</style>
+{% endblock %}
+
+{% block body %} 
+<div class="container my-4">
+    <h1>{{request.session.category}} Products:</h1>
+    <hr>
+    <div class="project-cards-flex">
+        {% for product in allProds %}
+        <div class=" row mx-2 my-2">
+            {% for i in product %}
+            <div class="card" style="width: 18rem;">
+                <a href="/shop/products/id={{i.id}}"><img src='/media/{{i.image}}'  class="card-img-top" alt="Project-Img" height="200px" width="900px"></a>
+                <div class="card-body">
+                    <p class="card-text">{{i.product_name|slice:"0:50"}}...</p>
+                    <b class="card-title text-center">Rs.{{i.price}} </b>
+                    <a href="/shop/products/id={{i.id}}" class="btn btn-primary btn-sm">Visit deal</a>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+            </div></div> <div class="project-cards-flex">
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock body %}
+
+{% block js %}
+<script>
+</script>
+{% endblock %} 
+

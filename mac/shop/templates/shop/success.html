@@ -1,0 +1,30 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Success Page {% endblock %}
+
+{% block css %}
+<style>
+    
+</style>
+{% endblock %}
+
+{% block body %} 
+    {% if thank %}
+<div class="p-5 mb-4 alert alert-success rounded-3 my-3 mx-3" role="alert">
+    <div class="container py-5">
+      <h1 class="display-5 fw-bold">Success!</h1>
+      <p class="fs-4">Your Order has been Placed.Your order is {{id}}. Use it to track your order using our order tracker</p>
+      <a href="/shop/"><button class="btn btn-primary btn-lg" type="button">Back to Home</button></a>
+    </div>
+    {% endif %}
+  </div>
+
+
+{% endblock body %}
+
+{% block js %}
+<script>
+    localStorage.clear();
+</script>
+{% endblock %} 
+

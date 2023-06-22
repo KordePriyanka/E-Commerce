@@ -1,0 +1,535 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Checkout Orders {% endblock %}
+
+{% block css %}
+<style>
+  .col-md-3 img {
+    width: 300px;
+    object-fit: contain;
+  }
+
+  #items {
+    display: inline-block;
+  }
+
+  #cartEmpty {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid rgb(233, 232, 232);
+    border-radius: 10px;
+  }
+
+  #cartEmpty img {
+    width: 500px;
+  }
+
+  /* RESPONSIVE CSS
+  -------------------------------------------------- */
+
+	@media (min-width: 465px) {
+
+		/* Bump up size of carousel content */
+    .col-md-3 img {
+      background-color: 2px solid black;
+      width: 200px
+      ;
+      object-fit: contain;
+    }
+	}
+
+
+	
+  
+</style>
+{% endblock %}
+
+{% block body %}
+  <!--Error alert  -->
+  <div id="errorMsg" name="errorMsg" class="alert alert-danger alert-dismissible fade show" style="display: none;"
+    role="alert">
+    <strong>Error!</strong> Check All details before Placing the order.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  
+<div class="container" >
+
+  <!-- Display Products and Total Amount -->
+  <div class="row" id="cartStatus">
+    <!-- col1 -->
+    <h2 class="my-4">MyCart checkout - Review Your Cart Items</h2>
+    <div class="col my-2">
+      <ul class="list-group col-md-12" id="items">
+      </ul>
+
+      <ul class="col-md-12 col-sm-8 list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between">
+          <button type="button" class="btn btn-primary" id="clearCart" name="clearCart">Clear Cart</button>
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- <div id="printableArea"> -->
+    <!-- col 2 -->
+    <!-- Payment Options -->
+    <div class="col-md-6">
+      <div class="col-md-9 col-lg-9 order-md-last">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-primary">Prize Details:</span>
+          <span class="badge bg-primary rounded-pill" id="totalProducts">0</span>
+        </h4>
+        <ul class="list-group mb-3" id="totalProductsOrder">
+
+
+        </ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total Amount:</span>
+          <span>Rs.<strong id="totalAmount"></strong></span>
+        </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Form -->
+  <div class="col my-4">
+    <h2>Enter Address & Other Details</h2>
+    <form class="row g-3 my-3" method="post" action="/shop/checkout/">
+      {% csrf_token %}
+      <!-- Hidden Input for writting for json  -->
+      <input type="hidden" name="itemsJson" id="itemsJson">
+      <!-- Hidden Input for writting for json  -->
+      <input type="hidden" name="productsName" id="productsName">
+      <!-- Hidden Input for Amount -->
+      <input type="hidden" name="amount" id="amount">
+      <!-- Name -->
+      <div class="col-md-6">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Your FirstName LastName"
+          required>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Only alphabets!
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- Email -->
+      <div class="col-md-6">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" name="email" placeholder="Enter Your Email"
+          required value="{{request.session.email}}" disabled>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          incorrect Email!
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- Address 1 -->
+      <div class="col-12">
+        <label for="address1" class="form-label">Address line 1</label>
+        <input type="text" class="form-control" id="address1" name="address1" placeholder="Enter Your Address line 1"
+          required>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          incorrect Address 1
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- Address 2 -->
+      <div class="col-12">
+        <label for="address2" class="form-label">Landmark</label>
+        <input type="text" class="form-control" id="address2" name="address2" placeholder="Enter Your Landmark">
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          incorrect Land Mark
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- Phone -->
+      <div class="col-12">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter Your Phone Number" required>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Incorrect Phone Number ! 10 Digit Phone number..
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- City -->
+      <div class="col-md-6">
+        <label for="city" class="form-label">City</label>
+        <input type="text" class="form-control" id="city" name="city" placeholder="Enter Your City" required>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Incorrect City
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- State -->
+      <div class="col-md-4">
+        <label for="state" class="form-label">State</label>
+        <input type="text" class="form-control" id="state" name="state" placeholder="Enter Your State" required>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Incorrect State
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- ZipCode -->
+      <div class="col-md-2">
+        <label for="zip_code" class="form-label">Zip</label>
+        <input type="text" class="form-control" id="zip_code" name="zip_code" placeholder="Enter your Zip code"
+          required>
+        <!-- For InValid Feedback -->
+        <div id="" class="invalid-feedback">
+          Incorrect ZipCode
+        </div>
+        <!-- For Valid Feedback -->
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+      </div>
+      <!-- Submit Button -->
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary" id="placeOrder" name="placeOrder" disabled>Cash On Delivery</button>
+      </div>
+    </form>
+  </div>
+<!-- </div> -->
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script>
+
+  // for printing the checkout page
+  function printDiv(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = printContents;
+
+    window.print();
+
+    document.body.innerHTML = originalContents;
+}
+//https://stackoverflow.com/questions/16894683/how-to-print-html-content-on-click-of-a-button-but-not-the-page
+
+  checkoutCartItems()
+  clearCartProducts()
+  removeProduct()
+
+  // logic for clear Cart
+  function clearCartProducts() {
+    clearCart = document.getElementById('clearCart')
+    clearCart.addEventListener('click', () => {
+      localStorage.clear();
+      cart = {}
+      location.reload(true)
+    })
+    checkoutCartItems()
+  }
+
+
+  function checkoutCartItems() {
+    if (localStorage.getItem('cart') == null) {
+      var cart = {};
+    }
+    else {
+      cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+
+    // disabled for Place order
+    if (Object.entries(cart).length !== 0) {
+      document.getElementById("placeOrder").removeAttribute('disabled');
+    }
+
+    let myStr = ""
+    let myTotalAmountStr = ""
+    let total = 0
+    let myNewName = "" 
+
+    if (Object.entries(cart).length === 0) {
+
+      document.getElementById('cartStatus').innerHTML = `
+        <div id="cartEmpty">
+          {% load static %}
+          <img src="{% static 'shop/emptyCard.webp' %}" alt="..."  >
+          Your cart is empty, please add some items before checking out ! 
+        </div>
+        `
+
+    }
+    else {
+
+      let sum = 0
+      for (item in cart) {
+        let name = cart[item][1];
+        let qty = cart[item][0];
+        let image = cart[item][2];
+        let prize = cart[item][3];
+
+        totalPrize = qty * prize.slice(3,)
+        sum = sum + qty;
+        total = total + totalPrize
+
+
+        myNewStr = `
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div class="row">
+            <div class="col-md-3">
+              <a href="/shop/products/id=${item.slice(2,)}"><img src=${image} class="item-image img-fluid" alt="..."></a>
+            </div>
+            <div class="col-md-6">
+              <p>${name}</p>
+              <p>Quantity:${qty}</p>
+              <b><p>${prize}    <button type="button" class="btn btn-outline-primary btn-sm removeItem"  id="remove${item}" name="remove${item}">Remove</button> </p></b> 
+            </div>
+          </div>
+        </li>
+        `
+
+        myNewTotalAmountStr = ` 
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">${name}</h6>
+            </div>
+            <span class="text-muted">Rs.${totalPrize}</span>
+          </li>
+          `
+
+        myStr = myStr + myNewStr;
+        myNewName = myNewName +  name + ",";
+        
+
+        myTotalAmountStr = myTotalAmountStr + myNewTotalAmountStr;
+
+        document.getElementById('cart').innerHTML = sum;
+        document.getElementById('totalProducts').innerHTML = sum;
+
+        
+       
+      }
+    }
+    document.getElementById('productsName').value = myNewName
+    document.getElementById('itemsJson').value = JSON.stringify(cart)
+    document.getElementById('amount').value = total;
+    document.getElementById('amount').innerHTML = total;
+
+    document.getElementById('items').innerHTML = myStr;
+    document.getElementById('totalProductsOrder').innerHTML = myTotalAmountStr;
+
+    document.getElementById('totalAmount').innerHTML = total
+
+  }
+  
+  // function to remove particular products from the cart
+  function removeProduct() {
+    if (localStorage.getItem('cart') == null) {
+      var cart = {};
+    }
+    else {
+      cart = JSON.parse(localStorage.getItem('cart'));
+    }
+
+    products_to_remove_buttons = document.getElementsByClassName('removeItem')
+    Array.from(products_to_remove_buttons).forEach(function (removeItem) {
+      removeItem.addEventListener("click", () => {
+        removeItem_id = removeItem.id.slice(6,)
+        delete cart[removeItem_id]
+        localStorage.setItem('cart', JSON.stringify(cart));
+        location.reload(true)
+      })
+    })  
+}
+
+
+
+  // For using regex classes for validations
+  const userName = document.getElementById('name')
+  const email = document.getElementById('email') // no regex for email 
+  const address1 = document.getElementById('address1')
+  const address2 = document.getElementById('address2')
+  const phone = document.getElementById('phone')
+  const city = document.getElementById('city')
+  const state = document.getElementById('state')
+  const zip_code = document.getElementById('zip_code')
+  const errorMsg = document.getElementById('errorMsg')
+
+
+  // setting flags
+  let validUserName = false;
+  let validEmail = false;
+  let validAddress = false;
+  let validPhone = false;
+  let validCity = false;
+  let validState = false;
+  let validZipCode = false;
+
+  // Name Event Listener
+  userName.addEventListener('blur', () => {
+    //  validate name here
+    let regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,30}$/;
+    // Pooja Bhagat - start with alphabet and space and end with alphabet
+    // username should not start with number
+    // username should be alphabets only
+    // username should not have special characters
+    let str = userName.value;
+    if (regex.test(str)) {
+      userName.classList.remove('is-invalid')
+      userName.classList.add('is-valid');
+      validUserName = true;
+    }
+    else {
+      userName.classList.remove('is-valid');
+      userName.classList.add('is-invalid');
+      validUserName = false;
+    }
+  });
+
+  // address1 Event listener
+  address1.addEventListener('blur', () => {
+    //  validate email here `
+    let regex = /^[a-zA-Z0-9]+( [a-zA-Z',-\\/.\s]+){2,100}$/;
+    let str = address1.value;
+    if (regex.test(str)) {
+      address1.classList.remove('is-invalid')
+      address1.classList.add('is-valid');
+      validAddress = true;
+    }
+    else {
+      address1.classList.remove('is-valid');
+      address1.classList.add('is-invalid')
+      validAddress = false;
+    }
+  });
+
+  // Phone number
+  phone.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^[0-9]{10}$/;
+    let str = phone.value;
+    if (regex.test(str)) {
+      phone.classList.remove('is-invalid')
+      phone.classList.add('is-valid');
+      validPhone = true;
+    }
+    else {
+      phone.classList.remove('is-valid');
+      phone.classList.add('is-invalid')
+      validPhone = false;
+    }
+  });
+
+  // city number
+  address2.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^[a-zA-Z\s-;,'\\]{3,30}$/;
+    let str = address2.value;
+    if (regex.test(str)) {
+      address2.classList.remove('is-invalid')
+      address2.classList.add('is-valid');
+      validAddress = true;
+    }
+    else {
+      address2.classList.remove('is-valid');
+      address2.classList.add('is-invalid')
+      validAddress = false;
+    }
+  });
+
+
+  // city number
+  city.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^[a-zA-Z\s-]{3,20}$/;
+    let str = city.value;
+    if (regex.test(str)) {
+      city.classList.remove('is-invalid')
+      city.classList.add('is-valid');
+      validCity = true;
+    }
+    else {
+      city.classList.remove('is-valid');
+      city.classList.add('is-invalid')
+      validCity = false;
+    }
+  });
+
+  // state number
+  state.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^[a-zA-Z\s-]{3,20}$/;
+    let str = state.value;
+    if (regex.test(str)) {
+      state.classList.remove('is-invalid')
+      state.classList.add('is-valid');
+      validState = true;
+    }
+    else {
+      state.classList.remove('is-valid');
+      state.classList.add('is-invalid')
+      validState = false;
+    }
+  });
+
+  // Zip Code number
+  zip_code.addEventListener('blur', () => {
+    //  validate email here 
+    let regex = /^[0-9]{6}$/;
+    let str = zip_code.value;
+    if (regex.test(str)) {
+      zip_code.classList.remove('is-invalid')
+      zip_code.classList.add('is-valid');
+      validZipCode = true;
+    }
+    else {
+      zip_code.classList.remove('is-valid');
+      zip_code.classList.add('is-invalid')
+      validZipCode = false;
+    }
+  });
+
+  // Submit Button Event listener
+  let submit = document.getElementById('placeOrder');
+  submit.addEventListener('click', (e) => {
+    if (validUserName && validPhone && validAddress && validZipCode && validCity && validState) {
+      errorMsg.style.display = 'none';
+    }
+    else {
+      errorMsg.style.display = 'block';
+      e.preventDefault();
+    }
+  })
+
+</script>
+{% endblock %}

@@ -1,0 +1,482 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %} Shop - Index Page {% endblock %}
+
+{% block css %}
+<style>
+  body{
+    background-color: rgb(241, 241, 241);
+  }
+  .margin-top{
+    margin-top: 5rem;
+  }
+
+  .col-md-3 {
+    display: inline-block;
+    margin-right: -5px;
+  }
+
+  .col-md-3 img {
+    max-width: 275px;
+    height: 242px;
+  }
+
+  body .carousel-indicators .active {
+    background-color: rgb(41, 103, 189);
+  }
+
+
+  body .carousel-indicators {
+    bottom: 0;
+  }
+
+  body .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  body .carousel-control-prev-icon,
+  body .carousel-control-next-icon {
+    background-color: rgb(239 241 236);
+    
+    padding-top: 150px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  body .carousel-indicator li {
+    background-color: blue;
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    top: auto;
+    bottom: auto;
+    padding-top: 130px;
+  }
+
+  .border-card {
+    border: 2px solid rgb(221, 219, 219);
+  }
+
+  .margin-bottom{
+    margin-bottom: 2px;
+  }
+
+  	/* Featurettes
+  ------------------------- */
+
+	.featurette-divider {
+		margin: 5rem 0;
+		/* Space out the Bootstrap <hr> more */
+	}
+
+	/* Thin out the marketing headings */
+	.featurette-heading {
+		font-weight: 300;
+		line-height: 1;
+		letter-spacing: -.05rem;
+	}
+
+	.featurette-image {
+		margin-top: 7rem;
+	}
+
+
+	/* Center align the text within the three columns below the carousel */
+	.marketing .col-lg-4 {
+		margin-bottom: 1.5rem;
+		text-align: center;
+	}
+
+	.marketing h2 {
+		font-weight: 400;
+	}
+
+	.marketing .col-lg-4 p {
+		margin-right: .75rem;
+		margin-left: .75rem;
+	}
+
+  	/* CUSTOMIZE THE CAROUSEL
+  -------------------------------------------------- */
+
+	/* Carousel base class */
+	.carousel {
+		margin-bottom: 4rem;
+	}
+
+	/* Since positioning the image, we need to help out the caption */
+	.carousel-caption {
+		bottom: 3rem;
+		z-index: 10;
+	}
+
+	/* Declare heights because of positioning of img element */
+	.carousel-item {
+		height: 32rem;
+	}
+
+	.carousel-item>img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		min-width: 100%;
+		height: 32rem;
+	}
+
+  /* RESPONSIVE CSS
+  -------------------------------------------------- */
+
+	@media (min-width: 40em) {
+
+		/* Bump up size of carousel content */
+		.carousel-caption p {
+			margin-bottom: 1.25rem;
+			font-size: 1.25rem;
+			line-height: 1.4;
+		}
+
+		.featurette-heading {
+			font-size: 50px;
+		}
+
+
+		.featurette-image {
+			margin-top: 7rem;
+		}
+	}
+
+	@media (min-width: 62em) {
+		.featurette-heading {
+			margin-top: 7rem;
+		}
+
+	}
+
+  @media only screen and (max-width: 1200px){
+    body{
+      background:  rgb(231, 231, 210);
+      font-size: small;
+    }
+
+    .ProdViewBtn{
+      margin-top: 2px;
+      width: 121px;
+      height: 34px;
+      font-size: small;
+    }
+    
+    .addCartBtn{
+      font-size: small;
+      width: 121px;
+      height: 34px;
+    }
+
+    .col-md-3 img {
+      max-width: 153px;
+      height: 150px;
+  }
+
+  .cardTitle{
+    font-size: medium;
+  }
+
+  .minus{
+    width: 49px;
+  }
+  
+  .plus{
+    width: 49px;
+  }
+
+  body .carousel-indicators .active {
+    background-color: rgb(41, 103, 189);
+  }
+
+
+  body .carousel-indicators {
+    display: none;
+  }
+
+  .carousel-item {
+    height: 22rem;
+  }
+  }
+
+  @media only screen and (max-width: 775px){
+    body{
+      background-color: rgb(186, 230, 230);
+    }
+
+    body .carousel-control-prev-icon,
+    body .carousel-control-next-icon{
+      background-color: rgb(141 223 17);
+      padding-top: 10px;
+      padding-left: 3px;
+      padding-right: 3px;
+  }
+
+  .addCartBtn{
+    display: none;
+  }
+
+  .ProdViewBtn{
+    display: none;
+  }
+  
+  .productDesc{
+    display: none;
+  }
+
+  .divpr{
+    display: none;
+  }
+
+  .col-md-3 img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .cardTitle{
+    font-size: xx-small;
+  }
+
+  .col-md-3{
+    font-size: xx-small;
+  }
+
+  .card{
+    width: 80px;
+  }
+
+  .carousel-item{
+    max-height: 150px;
+  }
+
+
+    
+  }
+
+</style>
+{% endblock %}
+
+
+{% block body %}
+{% load static %}
+
+     
+<!-- All Products -->
+<div class="container" >
+
+  <!--Slideshow starts here -->
+  {% for product, range, nSlides in allProds %}
+
+  <!-- TODO: The heading of first carousel is not shown!! -->
+  <h5 class="my-4 margin-top">Flash Sale On {{product.0.category}} - Recommended Items</h5>
+
+  <div class="row">
+    <!-- div for carousel -->
+    <div id="demo{{forloop.counter}}" class="col carousel slide my-3" data-bs-ride="carousel">
+      <!-- Indicators: These are the indicators i.e dots at the bottom -->
+
+      <ul class="carousel-indicators">
+        <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="0" class="active"></li>
+
+        {% for i in range %}
+        <li data-bs-target="#demo{{forloop.parentloop.counter}}" data-bs-slide-to={{i}}></li>
+        {% endfor %}
+      </ul>
+
+      <!-- Wrapper for slides -->
+      <div class="container carousel-inner no-padding">
+
+        <!-- 1 carousel -->
+        <div class="carousel-item active">
+          {% for i in product %}
+          <div class="col-xs-3 col-sm-3 col-md-3">
+            <div class="card align-items-center border-card">
+              <a href="/shop/products/id={{i.id}}"><img src="/media/{{i.image}}" id="imgpr{{i.id}}" class="card-img-top img-fluid cardImg" alt="..."></a>
+              <div class="card-body">
+                <h5 class="card-title cardTitle" id="namepr{{i.id}}">{{i.product_name|slice:'0:20'}}</h5>
+                <p class="card-text margin-bottom productDesc">{{i.desc|slice:'0:20'}}...</p>
+                <b><p class="card-text" id="prizepr{{i.id}}">Rs.{{i.price}}</p></b>
+                <!-- button Add to card -->
+                <span id="divpr{{i.id}}" class="divpr ">
+                  <button id="pr{{i.id}}" class="btn btn-primary cart addCartBtn">Add to Cart</button>
+                </span>
+                <!-- button for Product View -->
+                <a href="/shop/products/id={{i.id}}"><button id="pv{{i.id}}" class="btn btn-primary ProdViewBtn">Product
+                    View</button></a>
+              </div>
+            </div>
+          </div>
+          {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+        </div>
+        <div class="carousel-item">
+          {% endif %}
+          {% endfor %}
+        </div>
+
+      </div> <!-- container carousel-inner no-padding -->
+    </div> <!-- carousel slide my-3 -->
+
+
+
+    <!-- button keep out of container so that notoverlapping the carousel -->
+    <!-- Left and right controls -->
+    <a class="carousel-control-prev" href="#demo{{forloop.counter}}" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+
+    <a class="carousel-control-next" href="#demo{{forloop.counter}}" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+
+  </div> <!-- rows of container -->
+  {% endfor %}
+</div> <!-- Main container -->
+
+{% endblock %}
+
+
+<!-- javascript -->
+{% block js %}
+<script>
+
+  /*
+  Functions and there descriptions:
+  add_products_cart(): this function will add the products in cart and update in local storage
+
+  total_cart_product(cart) : this function will add the total products present in local storage and show navigation bar
+
+  updatecart(cart): this function will increment and decrement the cart and storage in local storage as well update in navigation
+
+  TODO: REMOVE redundant lines
+  */
+
+  // Find out the cart items from localStorage
+  if (localStorage.getItem('cart') == null) {
+    // initialize an cart object
+    var cart = {};
+  }
+  else {
+    // in localstorage the item is in string form so to parse in JSON format use JSON.parse
+    cart = JSON.parse(localStorage.getItem('cart'));
+    // calling the function to get total cart products:
+    total_cart_product(cart)
+    updateCart(cart)
+  }
+
+  // If the add to cart button is clicked, add/increment the item
+  cart_products = document.getElementsByClassName('cart')
+
+  
+  Array.from(cart_products).forEach(function (cart_product) {
+    cart_product.addEventListener("click", add_products_cart)
+  })
+
+
+  //***************************************************************************************************************************
+
+  // Adding products to cart
+  function add_products_cart(event) {
+    var idStr = this.id.toString();
+    //console.log(idStr); // idStr is the key and added is values
+
+    // if cart[pr5] is defined then go in if
+    if (cart[idStr] != undefined) {
+      // cart[pr5] = (cart[pr5].value + 1) i.e. 1 + 1
+      qty = cart[idStr][0] + 1;
+      cart[idStr] = [qty, name];
+    }
+    else {
+      qty = 1;
+      name = document.getElementById('name' + idStr).innerHTML;
+      image = document.getElementById('img' + idStr).src;
+      prize = document.getElementById('prize' + idStr).innerHTML;
+      cart[idStr] = [qty, name, image , prize]; // cart_key = cart_value
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    // since i am already having cart
+    total_cart_product(cart)
+    updateCart(cart)
+  }
+
+  //***************************************************************************************************************************
+
+  // total cart products in navigation bar
+  function total_cart_product(cart) {
+    var sum = 0
+    for(let item in cart){
+      sum = sum + cart[item][0];
+    }
+    document.getElementById('cart').innerHTML = sum;
+  }
+
+
+  //***************************************************************************************************************************
+  
+  // For incrementing and decrementing the cart
+  function updateCart(cart){
+
+    for(let item in cart){
+      document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'> - </button> <span id='val" + item + "' >" + cart[item][0] + "</span> <button id='plus" + item + "' class='btn btn-primary plus'> + </button>";
+    }
+    
+
+    
+  minus = document.getElementsByClassName("minus")
+  
+  // ************ For Minus Button *****************
+  
+  Array.from(minus).forEach(function (item_minus) {
+    item_minus.addEventListener("click", ()=>{
+      minus_btn_id = item_minus.id
+      span_btn_id = item_minus.parentElement.children[1].id
+      
+      cart_item_id = minus_btn_id.slice(5,)
+      cart[cart_item_id][0] = cart[cart_item_id][0]  - 1
+      cart[cart_item_id][0] = Math.max(0, cart[cart_item_id][0]);
+
+      if(cart[cart_item_id][0] == 0){
+        cart_zero_item_id = 'div'+ cart_item_id
+        document.getElementById(cart_zero_item_id).innerHTML = `<button id=${cart_item_id} class="btn btn-primary cart">Add to Cart</button>` 
+        delete cart[cart_item_id]
+        updateCart(cart)
+        location.reload(true)
+      }
+      else{
+        span_btn_id.innerHTML = cart[cart_item_id][0] // we will have cart[cart_item_id] is value of pr1
+      }
+      updateCart(cart)
+      total_cart_product(cart)
+    })
+  })
+  
+  
+  // ************ For Plus Button *****************
+  plus = document.getElementsByClassName("plus")
+  Array.from(plus).forEach(function (item_plus) {
+    item_plus.addEventListener("click", ()=>{
+      minus_btn_id = item_plus.id
+      span_btn_id = item_plus.parentElement.children[1].id
+      plus_btn_id = item_plus.parentElement.children[2].id
+      cart_item_id = plus_btn_id.slice(4,)
+      cart[cart_item_id][0] = cart[cart_item_id][0] + 1
+      span_btn_id.innerHTML = cart[cart_item_id][0]
+      updateCart(cart)
+      total_cart_product(cart)
+    })
+  })
+     
+  // Adding items in local storage
+  //console.log("Update cart returns during reloading only" , cart)
+  localStorage.setItem('cart', JSON.stringify(cart));
+  }
+  
+  //***************************************************************************************************************************
+
+
+</script>
+{% endblock %}

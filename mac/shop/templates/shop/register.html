@@ -1,0 +1,257 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+
+{% block title %} Registration Page {% endblock %}
+
+{% block body %}
+<div class="container my-3">
+    <!--Error alert  -->
+    <div id="errorMsg" name="errorMsg" class="alert alert-danger alert-dismissible fade show" style="display: none;"
+        role="alert">
+        <strong>Error!</strong> Check Username | Email | Password before submitting.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <!-- Form For registration -->
+    <form method="POST" action="/shop/register/">
+        {% csrf_token %}
+        <div class="text-center form-group mb-4">
+            <img class="mb-4" src="/static/shop/register.png" alt="Contact Us" width="150" height="150">
+            <h1 class="h2 mb-3 font-weight-normal">Register Yourself</h1>
+        </div>
+
+        <div class="col-md-8 col-12 form-group mx-auto">
+
+            <!-- username -->
+            <div class="form-group mb-3">
+                <label for="username" class="form-label">username:</label>
+                <input type="text" name="username" class="form-control" placeholder="username" required=""
+                    id="username">
+                <!-- For invalid Feedback -->
+                <div id="" class="invalid-feedback">
+                    Username cannot have spaces | username should not start with number | username should be from 3 to
+                    15 | username should not have special characters
+                </div>
+                <!-- For Valid Feedback -->
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" name="email" class="form-control" placeholder="Email" required="" id="email">
+                <!-- For invalid Feedback -->
+                <div id="" class="invalid-feedback">
+                    Email is incorrect!
+                </div>
+                <!-- For Valid Feedback -->
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <!-- Security Questions -->
+            <div class="form-group mb-3">
+                <label for="securityQuestion" class="form-label">Security Question</label>
+                <select class="form-select" aria-label="Default select example" name="securityQuestion"
+                    id="securityQuestion">
+                    <option selected value="What was your childhood nickname?">What was your childhood nickname?
+                    </option>
+                    <option value="what high school did you attend?">what high school did you attend?</option>
+                    <option value="what was your first pet’s name?">what was your first pet’s name?</option>
+                </select>
+            </div>
+
+
+            <!-- Security Answer -->
+            <div class="form-group mb-3">
+                <label for="securityAnswer" class="form-label">Security Answer</label>
+                <input type="text" name="securityAnswer" class="form-control" placeholder="Security Answer" required=""
+                    id="securityAnswer" name="securityAnswer">
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" name="phone" id="phone" placeholder="Enter Your Phone number:">
+                <!-- For InValid Feedback -->
+                <div class="invalid-feedback">
+                    Only Numbers | 10 Digits | Incorrect Phone Number
+                </div>
+            </div>
+
+
+            <!-- Password -->
+            <div class="form-group mb-3">
+                <label for="password1" class="form-label">Password:</label>
+                <input type="password" name="password" class="form-control" placeholder="Password" required=""
+                    id="password">
+                <!-- For invalid Feedback -->
+                <div class="invalid-feedback">
+                    Password Must be 8 to 20 characters in length | Must contain at least one letter and one number and
+                    a special character from !@#$%^&*()_+ | Should not start with a special character
+                </div>
+                <!-- For Valid Feedback -->
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group mb-3">
+                <label for="confirm_password" class="form-label">Confirm Password:</label>
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password"
+                    required="" id="confirm_password">
+                <div id="passwordStatus" name="passwordStatus" class="invalid-feedback">
+                    Password Must be 8 to 20 characters in length | Must contain at least one letter and one number and
+                    a special character from !@#$%^&*()_+ | Should not start with a special character
+                </div>
+                <!-- For Valid Feedback -->
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <!-- Sign Up button -->
+            <button class="btn btn-lg btn-primary btn-block" id="submit" name="submit" type="submit">Register</button>
+    </form>
+    <p class="mt-5 mb-3 text-center text-muted">Already have an account? <a href="/shop/login/">Sign in here</a></p>
+</div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+
+    // Intialize the constants
+    const username = document.getElementById('username');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const confirm_password = document.getElementById('confirm_password');
+    const phone = document.getElementById('phone');
+    const passwordStatus = document.getElementById('passwordStatus');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // setting flags
+    let validUser = false;
+    let validEmail = false;
+    let validPassword = false;
+    let validPhone = false;
+
+
+    // username Event Listener
+    username.addEventListener('blur', () => {
+        //  validate name here
+        let regex = /^[a-zA-Z]([0-9a-zA-Z]){3,15}$/;
+        // username should not start with number
+        // username should be from 3 to 15 
+        // username should not have special characters
+        let str = username.value;
+        if (regex.test(str)) {
+            username.classList.remove('is-invalid')
+            username.classList.add('is-valid');
+            validUser = true;
+        }
+        else {
+            username.classList.remove('is-valid');
+            username.classList.add('is-invalid');
+            validUser = false;
+        }
+    });
+
+    // Email Event Listener
+    email.addEventListener('blur', () => {
+        //  validate email here 
+        let regex = /^([_\-\.0-9a-zA-Z]+)@([_\-\.0-9a-zA-Z]+).([a-zA-Z]{2,7}$)/;
+        let str = email.value;
+        if (regex.test(str)) {
+            email.classList.remove('is-invalid')
+            email.classList.add('is-valid');
+            validEmail = true;
+        }
+        else {
+            email.classList.remove('is-valid');
+            email.classList.add('is-invalid')
+            validEmail = false;
+        }
+    });
+
+  // Phone number
+  phone.addEventListener('blur', () => {
+    //  validate phone here 
+    let regex = /^[0-9]{10}$/;
+    let str = phone.value;
+    if (regex.test(str)) {
+      phone.classList.remove('is-invalid')
+      phone.classList.add('is-valid');
+      validPhone = true;
+    }
+    else {
+      phone.classList.remove('is-valid');
+      phone.classList.add('is-invalid')
+      validPhone = false;
+    }
+  });
+
+    //Password Event Listener
+    password.addEventListener('blur', () => {
+        // validate password here
+        let regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/;
+        let str = password.value;
+        // https://stackoverflow.com/questions/27938415/regex-for-password-atleast-1-letter-1-number-1-special-character-and-should
+        if (regex.test(str)) {
+            password.classList.remove('is-invalid')
+            password.classList.add('is-valid');
+        }
+        else {
+            password.classList.remove('is-valid');
+            password.classList.add('is-invalid')
+        }
+    })
+
+    //Password Event Listener
+    confirm_password.addEventListener('blur', () => {
+        // validate password here
+        let regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d][A-Za-z\d!@#$%^&*()_+]{7,19}$/;
+        let str = confirm_password.value;
+        if (regex.test(str)) {
+            confirm_password.classList.remove('is-invalid')
+            confirm_password.classList.add('is-valid');
+        }
+        else {
+            confirm_password.classList.remove('is-valid');
+            confirm_password.classList.add('is-invalid')
+        }
+
+        if (password.value === confirm_password.value) {
+            // Password Matched
+            confirm_password.classList.remove('is-invalid')
+            confirm_password.classList.add('is-valid');
+            passwordStatus.innerHTML = '<p>Password and Confirm Password are Matched!</p>'
+            validPassword = true
+        }
+        else {
+            // Password Not matched
+            confirm_password.classList.remove('is-valid');
+            confirm_password.classList.add('is-invalid')
+            passwordStatus.innerHTML = '<p>Password and Confirm Password are not Matching!</p>'
+            validPassword = false
+        }
+    })
+
+    // Submit Button Event listener
+    let submit = document.getElementById('submit');
+    submit.addEventListener('click', (e) => {
+        if (validEmail && validUser && validPassword) {
+            errorMsg.style.display = 'none';
+        }
+        else {
+            errorMsg.style.display = 'block';
+            e.preventDefault();
+        }
+    })
+
+</script>
+{% endblock %}
